@@ -24,9 +24,14 @@ namespace Shared
         {
             List<int> currentScore = GetScoreList();
             currentScore.Add(score);
-            List<int> scores = currentScore.OrderBy(s => s).ToList();
-            Debug.Log(currentScore[0]);
-            SetScore(scores[0], scores[1], scores[2], scores[3], scores[4]);
+            currentScore.Sort();
+            currentScore.Reverse();
+            
+            SetScore(currentScore[0], 
+                    currentScore[1], 
+                    currentScore[2],
+                    currentScore[3],
+                    currentScore[4]);
         }
 
         public static void SetScore(int first, int second, int third, int fourth, int fifth)
