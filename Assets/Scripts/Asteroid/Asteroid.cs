@@ -26,9 +26,9 @@ namespace Asteroid
             asteroidMovement.SetNewPosition(position);
         }
         
-        private void Remove(object sender, System.EventArgs e) => ReturnToPool();
+        private void Remove(object sender, EventArgs e) => ReturnToPool();
 
-        private void RemoveAndAddScore(object sender, System.EventArgs e)
+        private void RemoveAndAddScore(object sender, EventArgs e)
         {
             Remove(this, EventArgs.Empty);
             GameStats.AddToAsteroidsDestroyed(1);

@@ -13,6 +13,7 @@ namespace Asteroid
 
         [Header("Components")]
         [SerializeField] private Animator asteroidAnimator;
+        [SerializeField] private Collider2D asteroidCollider;
 
         [Header("Layers")]
         [SerializeField] private LayerMask cameraLayer;
@@ -21,14 +22,15 @@ namespace Asteroid
         [SerializeField] private float timeToDestroy;
         [SerializeField] private string deathTrigger = "death";
 
-        private Coroutine timerToRemove;
-        private bool deathAnimationIsPlaying;
-        private bool isAsteroidAnimatorNull = true;
 
         protected override void Awake()
         {
-            isAsteroidAnimatorNull = asteroidAnimator == null;
-            timerToRemove = StartCoroutine(RemoveOnSeconds());
+            StartCoroutine(RemoveOnSeconds());
+        }
+
+        private void OnEnable()
+        {
+            asteroidCollider.enabled = true;
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -36,7 +38,7 @@ namespace Asteroid
             if (!collision.CompareLayers(cameraLayer))
                 return;
             
-            StopCoroutine(timerToRemove);
+            StopAllCoroutines();
         }
 
         private void OnTriggerExit2D(Collider2D collision)
@@ -44,7 +46,7 @@ namespace Asteroid
             if (!collision.CompareLayers(cameraLayer) || !enabled)
                 return;
             
-            timerToRemove = StartCoroutine(RemoveOnSeconds());
+            StartCoroutine(RemoveOnSeconds());
         }
 
         private IEnumerator RemoveOnSeconds()
@@ -64,43 +66,26 @@ namespace Asteroid
         {
             currentHealth -= damage;
 
-            if(currentHealth <= 0f && !deathAnimationIsPlaying)
+            if(currentHealth <= 0f)
                 StartCoroutine(PlayAnimationAndDie());
         }
 
         private IEnumerator PlayAnimationAndDie()
         {
-            deathAnimationIsPlaying = true;
-
-            if (isAsteroidAnimatorNull)
-            {
-                Death();
-                yield break;
-            }
-
-            AnimatorStateInfo info = asteroidAnimator.GetCurrentAnimatorStateInfo(0);
+            asteroidCollider.enabled = false;
             asteroidAnimator.SetTrigger(deathTrigger);
-            AnimatorStateInfo currentState = info;
-
-            bool StateChanged() => AnimatorStateChanged(info, out currentState);
-            yield return new WaitUntil(StateChanged);
-            float duration = currentState.length;
-            yield return new WaitForSeconds(duration);
-
-            Death();
-        }
-
-        private bool AnimatorStateChanged(AnimatorStateInfo info, out AnimatorStateInfo current)
-        {
-            AnimatorStateInfo currentInfo = asteroidAnimator.GetCurrentAnimatorStateInfo(0);
-            current = currentInfo;
-            return info.shortNameHash != current.shortNameHash;
-        }
-
-        protected override void Death()
-        {
-            deathAnimationIsPlaying = false;
             
+            yield return new WaitForEndOfFrame();
+            AnimatorStateInfo animatorStateInfo = asteroidAnimator.GetCurrentAnimatorStateInfo(0);
+            float time = animatorStateInfo.length;
+            
+            yield return new WaitForSeconds(time);
+            yield return new WaitForEndOfFrame();
+            DisableAsteroid();
+        }
+
+        protected override void DisableAsteroid()
+        {
             RestoreHealth();
             StopCoroutine(RemoveOnSeconds());
             

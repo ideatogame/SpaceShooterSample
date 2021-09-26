@@ -12,9 +12,9 @@ namespace Stats
             GameStats.OnAsteroidsDestroyedChanged += GameStats_OnAsteroidsDestroyedChanged;
         }
 
-        private void GameStats_OnAsteroidsDestroyedChanged(object sender, System.EventArgs e)
+        private void GameStats_OnAsteroidsDestroyedChanged(int asteroidsDestroyed)
         {
-            asteroidsCounter.text = GameStats.AsteroidsDestroyed.ToString();
+            asteroidsCounter.SetText(asteroidsDestroyed.ToString());
         }
     }
 }

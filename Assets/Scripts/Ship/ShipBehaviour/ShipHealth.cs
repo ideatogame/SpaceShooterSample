@@ -8,7 +8,7 @@ namespace Ship.Behaviour
     {
         [SerializeField] private int deathSceneBuildIndex = 4;
 
-        protected override void Death()
+        protected override void DisableAsteroid()
         {
             gameObject.SetActive(false);
             SceneManager.LoadScene(deathSceneBuildIndex);

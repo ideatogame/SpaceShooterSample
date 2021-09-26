@@ -17,7 +17,7 @@ namespace HealthSystem
             currentHealth -= damage;
 
             if (currentHealth <= 0f)
-                Death();
+                DisableAsteroid();
         }
 
         protected virtual void RestoreHealth()
@@ -25,6 +25,6 @@ namespace HealthSystem
             currentHealth = maxHealth;
         }
 
-        protected abstract void Death();
+        protected abstract void DisableAsteroid();
     }
 }

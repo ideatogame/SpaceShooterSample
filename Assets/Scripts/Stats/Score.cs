@@ -1,22 +1,25 @@
-﻿using System;
+﻿using Shared;
 using UnityEngine;
 
 namespace Stats
 {
     public class Score : MonoBehaviour
     {
-        private float currentScore = 0f;
+        private int currentScore = 0;
 
-        private void AddToScore(float value)
+        private void Awake()
         {
-            currentScore += value;
+            GameStats.OnAsteroidsDestroyedChanged += SetScore;
+        }
+        
+        private void OnDestroy()
+        {
+            GameStats.OnAsteroidsDestroyedChanged -= SetScore;
+            SaveScore();
         }
 
-        private void OnDestroy() => SaveScore();
+        private void SetScore(int value) => currentScore = value;
 
-        private void SaveScore()
-        {
-            
-        }
+        private void SaveScore() => PersistenceManager.AddScore(currentScore);
     }
 }

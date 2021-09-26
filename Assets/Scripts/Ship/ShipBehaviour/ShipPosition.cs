@@ -19,7 +19,7 @@ namespace Ship.Behaviour
                 return;
 
             Vector2 direction = _shipRigidbody.transform.right;
-            Vector2 force = direction * _shipForce * Time.deltaTime;
+            Vector2 force = direction * (_shipForce * Time.deltaTime);
             _shipRigidbody.AddForce(force);
         }
     }
