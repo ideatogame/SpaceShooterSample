@@ -43,7 +43,7 @@ namespace SpaceShooter.Pooling
             return pool;
         }
 
-        private GameObject CreateParentFolder(string folderName)
+        private static GameObject CreateParentFolder(string folderName)
         {
             GameObject parent = new GameObject($"[{folderName}Parent]");
             parent.transform.position = Vector3.zero;

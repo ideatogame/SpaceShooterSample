@@ -47,16 +47,11 @@ namespace Asteroid
             Vector2 leftBottom = _mainCamera.ViewportToWorldPoint(new Vector2(0, 0));
             Vector2 rightTop = _mainCamera.ViewportToWorldPoint(new Vector2(1, 1));
 
-            bool side = Random.value > 0.5f;
-            float xPosition;
-
-            if (side)
-                xPosition = Random.Range(leftBottom.x - _spawnMaxDistance - offset, leftBottom.x - offset);
-            else
-                xPosition = Random.Range(rightTop.x + offset, rightTop.x + _spawnMaxDistance + offset);
+            float xPosition = Random.value > 0.5f 
+                ? Random.Range(leftBottom.x - _spawnMaxDistance - offset, leftBottom.x - offset) 
+                : Random.Range(rightTop.x + offset, rightTop.x + _spawnMaxDistance + offset);
 
             float yPosition = Random.Range(leftBottom.y, rightTop.y);
-
             return new Vector2(xPosition, yPosition);
         }
 
